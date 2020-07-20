@@ -1,39 +1,131 @@
 <!DOCTYPE html>
-<html lang="en" >
-
-<head>
-  <meta charset="UTF-8">
-  <title>Tic Tac Toe (VS A.I.) v.2</title>
-  
-  
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css'>
-
-      <link rel="stylesheet" href="css/style.css">
-
-  
-</head>
-
-<body>
-
-  <div class="title">Tic Tac Toe</div>
-<button class="but"></button>
-<button class="but"></button>
-<button class="but"></button>
-<button class="but"></button>
-<button class="but"></button>
-<button class="but"></button>
-<button class="but"></button>
-<button class="but"></button>
-<button class="but"></button>
-<button id="reset" class="but">Reset</button>
-  
-  
-
-    <script  src="js/index.js"></script>
-
-
-
-
-</body>
-
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tic Tac Toe Game</title>
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div id="tic_tac_toe">
+      <div class="tiles">
+        <button v-for="button, index in buttons"
+                v-bind:class="{
+                                'tile' : true,
+                                'active' : button.active,
+                                'match': button.match,
+                                'disabled' : !play
+                              }"
+                v-bind:data-tile="index"
+                v-on:click.self="tileClick">
+          <div class="turn turn-0"
+               v-if="button.player === 0"></div>
+          <svg viewBox="0 0 30 30"
+               class="turn turn-1"
+               v-if="button.player === 1">
+            <circle fill="transparent"
+                    stroke="#d10827"
+                    stroke-width="3"
+                    r="10" cx="15" cy="15" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-window"
+           v-bind:class="{ 'shown' : showDialog }">
+        <!--STEP 1-->
+        <div class="dialog-box" v-if="dialogStep === 0">
+          <div class="dialog-content">
+            <p class="text-bold">{{ GameTitle }}</p>
+            <p>Welcome to the example TicTacToe game I made.</p>
+            <p>You may play this with your friend, or versus the computer.</p>
+          </div>
+          <div class="dialog-content">
+            <button class="btn tile"
+                    v-on:click="proceedToNext()">
+              Proceed to Game</button>
+          </div>
+        </div>
+        <!--STEP 2-->
+        <div class="dialog-box" v-if="dialogStep === 1">
+          <div class="dialog-content">
+            <p class="text-bold">{{ GameTitle }}</p>
+            <p>Choose your opponent to play with.</p>
+          </div>
+          <div class="dialog-content">
+            <button class="btn tile"
+                    v-on:click="chooseOpponent(false)">
+              Friend</button>
+            <button class="btn tile"
+                    v-on:click="chooseOpponent(true)">
+              Computer</button>
+          </div>
+        </div>
+        <!--STEP 3-->
+        <div class="dialog-box" v-if="dialogStep === 2">
+          <div class="dialog-content">
+            <p class="text-bold">{{ GameTitle }}</p>
+            <p>Choose your player.</p>
+          </div>
+          <div class="dialog-content">
+            <button class="btn btn-turn tile"
+                    v-on:click="choosePlayer(0)">
+              <div class="turn turn-0"></div>
+            </button>
+            <button class="btn btn-turn tile"
+                    v-on:click="choosePlayer(1)">
+              <svg viewBox="0 0 30 30"
+               class="turn turn-1">
+                <circle fill="transparent"
+                        stroke="#d10827"
+                        stroke-width="3"
+                        r="10" cx="15" cy="15" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <!--STEP 4-->
+        <div class="dialog-box" v-if="dialogStep === 3">
+          <div class="dialog-content">
+            <p class="text-bold">{{ GameTitle }}</p>
+            <p>Choose the computer's difficulty.</p>
+          </div>
+          <div class="dialog-content">
+          </div>
+          <div class="dialog-content">
+            <button class="btn tile"
+                    v-on:click="chooseDifficulty(0)">
+              Easy</button>
+            <button class="btn tile"
+                    v-on:click="chooseDifficulty(1)">
+              Medium</button>
+            <button class="btn tile"
+                    v-on:click="chooseDifficulty(2)">
+              Hard</button>
+          </div>
+        </div>
+        <!--STEP 5/GAME END-->
+        <div class="dialog-box" v-if="dialogStep === 4">
+          <div class="dialog-content">
+            <p class="text-bold">Game ended!</p>
+            <p v-if="winningPlayer !== null">
+              Player '{{ winningPlayer }}' won the game! Would you like to play again?
+            </p>
+            <p v-else="">
+              The match is a draw! Would you like to play again?
+            </p>
+          </div>
+          <div class="dialog-content">
+            <button class="btn tile"
+                    v-on:click="initialize()">
+              Start New</button>
+            <button class="btn tile"
+                    v-on:click="playAgain()">
+              Play Again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="js/script.js"></script>
+  </body>
 </html>
